@@ -52,10 +52,7 @@ export const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!user || !isPasswordCorrect) {
       return res.status(400).send("Invalid Username or password");
@@ -78,7 +75,7 @@ export const loginUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).send("Logout Successfully.");
+    res.status(200).send({ message: "Logout Successfully." });
   } catch (error) {
     console.log("Error in Logout Controller:-- ", error);
     res.send(error.message);
